@@ -18,7 +18,7 @@ export default function ProfilePage() {
   useEffect(() => {
     async function getUserData() {
           const userdbdata:any= await getSession()
-          setUserdata(userdbdata)
+          setUserdata(userdbdata?.user)
           if (!userdata) {
             router.push("/")
           }

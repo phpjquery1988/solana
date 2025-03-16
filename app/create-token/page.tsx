@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react"
 import {
   useWallet,
   useConnection,
-  WalletReadyState,
+  
 } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useRouter } from "next/navigation"
@@ -48,17 +48,66 @@ export default function CreateToken() {
   const { publicKey, sendTransaction,  signTransaction } = useWallet();
   const { connection } = useConnection();
   const [mintAddress, setMintAddress] = useState<string | null>(null);
+  const [userdata, setUserdata] = useState<any>([])
   const [recipientAddress, setRecipientAddress] = useState<string>('');
   const [mintAmount, setMintAmount] = useState<number>(0);
   const [jwtToken, setJwtToken] = useState<string | null>(null);
-  useEffect(() => {
-    console.log(session)
-    if (!session) {
-      router.push("/")
-    }
-  }, [connected, router])
 
+  useEffect(() => {
+    async function handleToken() {
+        const userdbdata:any= await getSession()
+       setUserdata(userdbdata?.user)
+       await generateJwt();
+    }
+    handleToken();
+  }, [connected, router])
+  const generateJwt = async () => {
+    try {
+      const response = await axios.post('/api/connect-wallet', {
+        publicKey: publicKey?.toString(),
+        id:session?.user?.id
+      });
+      setJwtToken(response.data.token);
+    } catch (error) {
+      console.error('JWT Error:', error);
+    }
+    
+    const response = await fetch('/api/connect-wallet', {
+      method: 'GET'
+    });
+  };
+  const createNewToken = async () => {
+    if (!publicKey || !connection) return;
+
+    try {
+      const response = await axios.post('/api/token', { jwt: jwtToken });
+      setMintAddress(response.data.mintAddress);
+      alert(`Mint Address: ${response.data.mintAddress}`);
+
+    } catch (error) {
+      console.error('Token Creation Error:', error);
+      alert('Failed to create token.');
+    }
+  };
+
+  const mintNewTokens = async () => {
+    if (!publicKey || !connection || !mintAddress) return;
+
+    try {
+      await axios.post('/api/mint-token', {
+        mintAddress: mintAddress,
+        recipientAddress: publicKey.toString(),
+        amount: mintAmount,
+        jwt: jwtToken
+      });
+      alert('Tokens minted successfully!');
+    } catch (error) {
+      console.error('Minting Error:', error);
+      alert('Failed to mint tokens.');
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
+    generateJwt()
     e.preventDefault()
     if (!captchaToken) {
       alert("Please complete the captcha")

@@ -44,7 +44,20 @@ async function deleteFile(filepath: string) {
     console.error("Error deleting file:", error)
   }
 }
+export async function GET(request: NextRequest) {
+  
+ 
+  return NextResponse.json({ error: "User not found" }, { status: 200 })
+}
+export async function POST(request: NextRequest) {
+  
+    const session = await auth()
 
+    if (!session || !session.user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+    }
+    return NextResponse.json({ error: "User not found" }, { status: 200 })
+  }
 export async function PUT(request: NextRequest) {
   try {
     const session = await auth()
