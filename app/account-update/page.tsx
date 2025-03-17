@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { AlertCircle } from "lucide-react"
 import { toast } from 'react-toastify';
-export default function AccountSetup() {
+export default function AccountUpdatePage() {
   const [username, setUsername] = useState("")
   const [description, setDescription] = useState("")
   const [prvImg, setPrvImg] = useState("")

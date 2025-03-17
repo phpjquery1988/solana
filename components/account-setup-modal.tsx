@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -24,10 +24,10 @@ export function AccountSetupModal({ isOpen, onClose }: AccountSetupModalProps) {
   const [description, setDescription] = useState("")
   const [photo, setPhoto] = useState<File | null>(null)
   const router = useRouter()
-  const searchParams = useSearchParams()
+  
   
   const { connected, publicKey,wallet } = useWallet()
-  const callbackUrl = searchParams.get("callbackUrl") || "/profile"
+  const callbackUrl ="/profile"
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const { data: session, update } = useSession();

@@ -30,7 +30,7 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
 import axios from 'axios';
-export default function CreateToken() {
+export default function CreateTokenPage() {
   const { data: session, status } = useSession();
   const [formData, setFormData] = useState({
     name: "",
